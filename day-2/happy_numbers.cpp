@@ -46,6 +46,25 @@ bool isHappy(int n) {
     return true;
 }
 
+// Solution 2:
+// More advanced solution and for explanation visit the below link,
+// https://leetcode.com/problems/happy-number/discuss/565692/C%2B%2B-0ms-O(n)-time-and-O(1)-space-with-in-depth-intuitive-explanation
+
+// no extra space
+bool isHappy_advanced(int n) {
+    int slow = n;
+    int fast = getNextNumber(n);
+
+    while (slow != fast) {
+        slow = getNextNumber(slow);
+
+        fast = getNextNumber(fast);
+        fast = getNextNumber(fast);
+    }
+
+    return slow == 1;
+}
+
 int main() {
     int num1 = 19;
     cout << isHappy(num1) << endl;
