@@ -34,6 +34,26 @@ void traverseIslandDFS(vector<vector<char>>& grid, int row, int col) {
 
 // BFS Solution
 // space complexity => O(m*n) we might end up having all elements in our queue
+void insertNeighbourLand(queue<pair<int, int>>& q, vector<vector<char>>& grid, int p_row, int p_col) {
+    // for checking neighbour lands (r, c+1), (r+1, c),(r-1,c),(r,c-1)
+    vector<int> changeInRow = {0, 1, -1, 0};
+    vector<int> changeInCol = {1, 0, 0, -1};
+
+    for (int nbrCell = 0; nbrCell < (int)changeInRow.size(); ++nbrCell) {
+        int nbrRow = p_row + changeInRow[nbrCell];
+        int nbrCol = p_col + changeInCol[nbrCell];
+
+        if (!isValidCell(grid, nbrRow, nbrCol)) {
+            continue;
+        }
+
+        if (grid[nbrRow][nbrCol] == '1') {
+            pair<int, int> nbrPair(nbrRow, nbrCol);
+            q.push(nbrPair);
+        }
+    }
+}
+
 void traverseIslandBFS(vector<vector<char>>& grid, int row, int col) {
     queue<pair<int, int>> q;
     pair<int, int> currPair(row, col);
@@ -52,26 +72,6 @@ void traverseIslandBFS(vector<vector<char>>& grid, int row, int col) {
 
         grid[p_row][p_col] = '0';
         insertNeighbourLand(q, grid, p_row, p_col);
-    }
-}
-
-void insertNeighbourLand(queue<pair<int, int>>& q, vector<vector<char>>& grid, int p_row, int p_col) {
-    // for checking neighbour lands (r, c+1), (r+1, c),(r-1,c),(r,c-1)
-    vector<int> changeInRow = {0, 1, -1, 0};
-    vector<int> changeInCol = {1, 0, 0, -1};
-
-    for (int nbrCell = 0; nbrCell < (int)changeInRow.size(); ++nbrCell) {
-        int nbrRow = p_row + changeInRow[nbrCell];
-        int nbrCol = p_col + changeInCol[nbrCell];
-
-        if (!isValidCell(grid, nbrRow, nbrCol)) {
-            continue;
-        }
-
-        if (grid[nbrRow][nbrCol] == '1') {
-            pair<int, int> nbrPair(nbrRow, nbrCol);
-            q.push(nbrPair);
-        }
     }
 }
 
