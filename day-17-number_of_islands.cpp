@@ -18,7 +18,8 @@ bool isValidCell(vector<vector<char>>& grid, int row, int col) {
 }
 
 // DFS Solution
-// space complexity => O(m*n) we might end up having all elements in call stack if all elements are '1'
+// Time complexity => O(m*n)
+// Space complexity => O(m*n) we might end up having all elements in call stack if all elements are '1'
 void traverseIslandDFS(vector<vector<char>>& grid, int row, int col) {
     if (!isValidCell(grid, row, col)) {
         return;
@@ -33,15 +34,15 @@ void traverseIslandDFS(vector<vector<char>>& grid, int row, int col) {
 }
 
 // BFS Solution
-// space complexity => O(m*n) we might end up having all elements in our queue
+// Time complexity => O(m*n)
+// Space complexity => O(m*n) we might end up having all elements in our queue
 void insertNeighbourLand(queue<pair<int, int>>& q, vector<vector<char>>& grid, int p_row, int p_col) {
     // for checking neighbour lands (r, c+1), (r+1, c),(r-1,c),(r,c-1)
-    vector<int> changeInRow = {0, 1, -1, 0};
-    vector<int> changeInCol = {1, 0, 0, -1};
+    vector<pair<int, int>> directions = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
 
-    for (int nbrCell = 0; nbrCell < (int)changeInRow.size(); ++nbrCell) {
-        int nbrRow = p_row + changeInRow[nbrCell];
-        int nbrCol = p_col + changeInCol[nbrCell];
+    for (pair<int, int> dir : directions) {
+        int nbrRow = p_row + dir.first;
+        int nbrCol = p_col + dir.second;
 
         if (!isValidCell(grid, nbrRow, nbrCol)) {
             continue;
