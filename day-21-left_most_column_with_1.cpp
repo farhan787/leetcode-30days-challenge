@@ -14,13 +14,18 @@
 
 // For custom testing purposes you're given the binary matrix mat as input in the following four examples. You will not have access the binary matrix directly.
 
+#include <limits.h>
+
 #include <iostream>
 #include <stack>
 #include <vector>
 using namespace std;
 
+// Abstracted by LeetCode
 class BinaryMatrix {
-    // Abstracted by LeetCode
+   public:
+    vector<int> dimensions();
+    int get(int row, int col);
 };
 
 // Time Complexity = O(|row| + |col|)
@@ -48,6 +53,56 @@ int leftMostColumnWithOne(BinaryMatrix& binaryMatrix) {
     return (left_most_col_index == INT_MAX) ? -1 : left_most_col_index;
 }
 
+// Non-trivial Optimized Binary Search approach
+// Time complexity = O(|row| * log|col|)
+// Space Complexity = O(1)
+int binarySearch(BinaryMatrix& binaryMatrix, int row, int start_index, int end_index) {
+    int index_of_1 = -1;
+    while (start_index <= end_index) {
+        int mid = start_index + (end_index - start_index) / 2;
+        int num = binaryMatrix.get(row, mid);
+
+        if (num == 1) {
+            index_of_1 = mid;
+            end_index = mid - 1;
+        } else {
+            start_index = mid + 1;
+        }
+    }
+    return index_of_1;
+}
+
+int leftMostColumnWithOne(BinaryMatrix& binaryMatrix) {
+    int left_most_index = -1;
+
+    vector<int> dimensions = binaryMatrix.dimensions();
+    const int row = dimensions[0];
+    const int col = dimensions[1];
+    const int searchStartIndex = 0;
+
+    int search_end_index = col - 1;
+    for (int i = 0; i < row; i++) {
+        int index_of_1 = binarySearch(binaryMatrix, i, searchStartIndex, search_end_index);
+
+        if (index_of_1 != -1) {
+            left_most_index = index_of_1;
+
+            // for next rows, we'll search for 1 only before the current index of 1
+            search_end_index = left_most_index - 1;
+        }
+
+        if (search_end_index < col - 1 && i + 1 < row && col - 1 > 0) {
+            int next_row_num = binaryMatrix.get(i + 1, col - 1);
+            if (next_row_num == 0) {
+                // we can skip the next row because
+                // it doesn't have a 1 in it before the current column or search_end_index
+                i++;
+            }
+        }
+    }
+
+    return left_most_index;
+}
+
 int main() {
-    return 0;
 }
